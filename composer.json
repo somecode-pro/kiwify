@@ -1,0 +1,17 @@
+{
+    "name": "somecode/snack",
+    "description": "Incredibly simple tool for automatically generating API documentation for Laravel",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Somecode\\Snack\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mikhail Protasevich",
+            "email": "m1nyasha@yandex.ru"
+        }
+    ],
+    "require": {}
+}
