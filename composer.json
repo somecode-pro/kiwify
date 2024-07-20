@@ -4,7 +4,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Somecode\\Snack\\": "src/"
+            "Somecode\\Restify\\": "src/"
         }
     },
     "authors": [
@@ -13,5 +13,10 @@
             "email": "m1nyasha@yandex.ru"
         }
     ],
-    "require": {}
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.16"
+    }
 }
