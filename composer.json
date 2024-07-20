@@ -7,6 +7,11 @@
             "Somecode\\Restify\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Somecode\\Restify\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Mikhail Protasevich",
@@ -17,6 +22,14 @@
         "php": "^8.2"
     },
     "require-dev": {
-        "laravel/pint": "^1.16"
+        "laravel/pint": "^1.16",
+        "orchestra/testbench": "^9.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Somecode\\Restify\\Providers\\RestifyServiceProvider"
+            ]
+        }
     }
 }
