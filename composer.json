@@ -1,5 +1,6 @@
 {
-    "name": "somecode/snack",
+    "name": "somecode/restify",
+    "version": "1.0.0",
     "description": "Incredibly simple tool for automatically generating API documentation for Laravel",
     "license": "MIT",
     "autoload": {
