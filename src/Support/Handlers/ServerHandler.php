@@ -2,7 +2,6 @@
 
 namespace Somecode\Restify\Support\Handlers;
 
-use _PHPStan_18cddd6e5\Nette\DI\InvalidConfigurationException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Somecode\OpenApi\Builder;
@@ -31,7 +30,7 @@ class ServerHandler implements Applieble
     /**
      * @return Collection<Server[]>
      *
-     * @throws InvalidConfigurationException
+     * @throws \Exception
      */
     private function validateAndGetServersFromConfig(): Collection
     {
@@ -45,7 +44,7 @@ class ServerHandler implements Applieble
 
         foreach ($serversFromConfig as $server) {
             if (! $this->validateServerRequiredFields($server)) {
-                throw new InvalidConfigurationException('Server url is required');
+                throw new \Exception('Server url is required');
             }
 
             $serverInstance = Server::create($server['url']);
@@ -72,13 +71,13 @@ class ServerHandler implements Applieble
         if (Arr::has($server, 'variables') && is_array($server['variables'])) {
             $variables = Arr::map($server['variables'], function ($variable) {
                 if (! Arr::has($variable, 'name')) {
-                    throw new InvalidConfigurationException('Server variable name is required');
+                    throw new \Exception('Server variable name is required');
                 }
 
                 $variableInstance = Variable::create($variable['name']);
 
                 if (! Arr::has($variable, 'enum')) {
-                    throw new InvalidConfigurationException('Server variable enum is required');
+                    throw new \Exception('Server variable enum is required');
                 }
 
                 $variableInstance->enum($variable['enum']);
