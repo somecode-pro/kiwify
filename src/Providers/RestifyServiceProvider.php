@@ -10,18 +10,31 @@ class RestifyServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        $this->app->bind('restify', RestifyService::class);
+        $this->services();
+        $this->console();
+        $this->resources();
+    }
 
+    public function register() {}
+
+    private function services(): void
+    {
+        $this->app->bind('restify', RestifyService::class);
+    }
+
+    private function console(): void
+    {
         if ($this->app->runningInConsole()) {
             $this->commands([
                 BuildCommand::class,
             ]);
         }
-
-        $this->publishes([
-            __DIR__.'/../../config/restify.php' => config_path('restify.php'),
-        ]);
     }
 
-    public function register() {}
+    private function resources(): void
+    {
+        $this->publishes([
+            __DIR__.'/../../config/restify.php' => config_path('restify.php'),
+        ], 'restify');
+    }
 }

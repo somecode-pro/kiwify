@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a2cc9897fcd1d5cf39c499ec4e71352b",
+    "content-hash": "be8b10e5a66601650b2943e78650d26f",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -141,16 +141,16 @@
         },
         {
             "name": "somecode/openapi-builder",
-            "version": "v1.0.5",
+            "version": "v1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/somecode-pro/openapi-builder.git",
-                "reference": "d4339e2405f9574b83ecf03e577a3d4c225e9031"
+                "reference": "8a9e19b08d526dd2c7cc65dc954df3a67fa2f76d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/somecode-pro/openapi-builder/zipball/d4339e2405f9574b83ecf03e577a3d4c225e9031",
-                "reference": "d4339e2405f9574b83ecf03e577a3d4c225e9031",
+                "url": "https://api.github.com/repos/somecode-pro/openapi-builder/zipball/8a9e19b08d526dd2c7cc65dc954df3a67fa2f76d",
+                "reference": "8a9e19b08d526dd2c7cc65dc954df3a67fa2f76d",
                 "shasum": ""
             },
             "require": {
@@ -180,9 +180,9 @@
             "description": "A package for convenient building and generation of Open API documentation",
             "support": {
                 "issues": "https://github.com/somecode-pro/openapi-builder/issues",
-                "source": "https://github.com/somecode-pro/openapi-builder/tree/v1.0.5"
+                "source": "https://github.com/somecode-pro/openapi-builder/tree/v1.0.6"
             },
-            "time": "2024-07-16T20:27:23+00:00"
+            "time": "2024-07-31T10:26:22+00:00"
         }
     ],
     "packages-dev": [
