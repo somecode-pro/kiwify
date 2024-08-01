@@ -1,15 +1,15 @@
 <?php
 
-namespace Somecode\Restify\Support\Handlers;
+namespace Somecode\Restify\Support\Applicants;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Somecode\OpenApi\Builder;
 use Somecode\OpenApi\Entities\Server\Server;
 use Somecode\OpenApi\Entities\Server\Variable;
-use Somecode\Restify\Support\Interfaces\Applieble;
+use Somecode\Restify\Support\Interfaces\Applicable;
 
-class ServerHandler implements Applieble
+class ServersApplicant implements Applicable
 {
     public function __invoke(Builder $builder): Builder
     {

@@ -4,7 +4,8 @@ namespace Somecode\Restify\Services;
 
 use Illuminate\Support\Facades\File;
 use Somecode\OpenApi\Builder;
-use Somecode\Restify\Support\Handlers\ServerHandler;
+use Somecode\Restify\Support\Applicants\RoutesApplicant;
+use Somecode\Restify\Support\Applicants\ServersApplicant;
 
 class RestifyService
 {
@@ -21,7 +22,8 @@ class RestifyService
 
     public function build(): void
     {
-        (new ServerHandler())($this->builder);
+        (new ServersApplicant)($this->builder);
+        (new RoutesApplicant)($this->builder);
 
         dump($this->builder->toArray());
 
