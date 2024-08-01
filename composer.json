@@ -1,10 +1,16 @@
 {
-    "name": "somecode/snack",
+    "name": "somecode/restify",
+    "version": "1.0.0",
     "description": "Incredibly simple tool for automatically generating API documentation for Laravel",
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "Somecode\\Restify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Somecode\\Restify\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -14,9 +20,19 @@
         }
     ],
     "require": {
-        "php": "^8.2"
+        "php": "^8.2",
+        "somecode/openapi-builder": "^1.0",
+        "phpdocumentor/reflection-docblock": "^5.4"
     },
     "require-dev": {
-        "laravel/pint": "^1.16"
+        "laravel/pint": "^1.16",
+        "orchestra/testbench": "^9.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Somecode\\Restify\\Providers\\RestifyServiceProvider"
+            ]
+        }
     }
 }
