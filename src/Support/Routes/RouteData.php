@@ -10,12 +10,18 @@ use Somecode\OpenApi\Entities\Method\Method;
 use Somecode\OpenApi\Entities\Method\Patch;
 use Somecode\OpenApi\Entities\Method\Post;
 use Somecode\OpenApi\Entities\Method\Put;
+use Somecode\Restify\Support\Routes\Resolvers\RouteAction;
+use Somecode\Restify\Support\Routes\Resolvers\Tags;
 
-readonly class RouteData
+class RouteData
 {
+    use RouteAction, Tags;
+
     public function __construct(
-        public Route $route
-    ) {}
+        public readonly Route $route
+    ) {
+        $this->getRouteAction($route);
+    }
 
     public function uri(): string
     {
@@ -34,7 +40,7 @@ readonly class RouteData
     {
         $method = $this->getMethodInstance();
 
-        //
+        $method->tags($this->tags());
 
         return $method;
     }
@@ -52,5 +58,10 @@ readonly class RouteData
             'DELETE' => Delete::create(),
             default => throw new \Exception('Method not supported'),
         };
+    }
+
+    private function tags(): array
+    {
+        return $this->getRouteTags($this->action());
     }
 }

@@ -10,6 +10,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Tags configuration
+    |--------------------------------------------------------------------------
+    |
+    | You can configure the tags behavior here.
+    |
+    | ignore_controller_prefix - If set to true, the controller prefix will be ignored.
+    | Example: ProductController -> Product
+    */
+
+    'tags' => [
+        'ignore_controller_prefix' => false
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | API Servers
     |--------------------------------------------------------------------------
     |
