@@ -55,7 +55,7 @@ trait Tags
         $names = ['tag', 'tags'];
 
         if ($docBlock->hasTag($names)) {
-            $values = $docBlock->getTagValues($names);
+            $values = $docBlock->tagValues($names);
 
             return $this->prepareTagValues($values);
         }

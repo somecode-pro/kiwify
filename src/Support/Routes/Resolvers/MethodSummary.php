@@ -35,6 +35,6 @@ trait MethodSummary
 
         $docBlock = DocBlock::create($docComment);
 
-        return $docBlock->getSummary();
+        return $docBlock->summary();
     }
 }

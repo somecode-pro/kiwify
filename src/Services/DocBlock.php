@@ -37,7 +37,7 @@ class DocBlock
         return false;
     }
 
-    public function getTagValues(array|string ...$tagNames): Collection
+    public function tagValues(array|string ...$tagNames): Collection
     {
         if (is_array($tagNames[0])) {
             $tagNames = $tagNames[0];
@@ -54,8 +54,13 @@ class DocBlock
         );
     }
 
-    public function getSummary(): ?string
+    public function summary(): ?string
     {
         return $this->docBlock->getSummary();
+    }
+
+    public function description(): ?string
+    {
+        return $this->docBlock->getDescription();
     }
 }
