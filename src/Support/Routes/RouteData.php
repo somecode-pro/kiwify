@@ -10,12 +10,13 @@ use Somecode\OpenApi\Entities\Method\Method;
 use Somecode\OpenApi\Entities\Method\Patch;
 use Somecode\OpenApi\Entities\Method\Post;
 use Somecode\OpenApi\Entities\Method\Put;
+use Somecode\Restify\Support\Routes\Resolvers\MethodSummary;
 use Somecode\Restify\Support\Routes\Resolvers\RouteAction;
 use Somecode\Restify\Support\Routes\Resolvers\Tags;
 
 class RouteData
 {
-    use RouteAction, Tags;
+    use MethodSummary, RouteAction, Tags;
 
     public function __construct(
         public readonly Route $route
@@ -42,6 +43,8 @@ class RouteData
 
         $method->tags($this->tags());
 
+        $this->applySummaryIfExists($method);
+
         return $method;
     }
 
@@ -63,5 +66,14 @@ class RouteData
     private function tags(): array
     {
         return $this->getRouteTags($this->action());
+    }
+
+    private function applySummaryIfExists(Method $method): void
+    {
+        $summary = $this->getSummary($this->action());
+
+        if (is_string($summary)) {
+            $method->summary($summary);
+        }
     }
 }

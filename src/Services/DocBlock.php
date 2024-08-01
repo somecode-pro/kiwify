@@ -53,4 +53,9 @@ class DocBlock
             fn (Tag $tag) => $tag->getDescription()->getBodyTemplate()
         );
     }
+
+    public function getSummary(): ?string
+    {
+        return $this->docBlock->getSummary();
+    }
 }
