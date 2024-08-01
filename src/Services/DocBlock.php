@@ -2,11 +2,10 @@
 
 namespace Somecode\Restify\Services;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlock as ReflectionDocBlock;
 use phpDocumentor\Reflection\DocBlock\Tag;
+use phpDocumentor\Reflection\DocBlockFactory;
 
 class DocBlock
 {
@@ -43,7 +42,7 @@ class DocBlock
         if (is_array($tagNames[0])) {
             $tagNames = $tagNames[0];
         }
-        
+
         $tags = collect();
 
         foreach ($tagNames as $tagName) {

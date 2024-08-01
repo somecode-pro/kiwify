@@ -20,7 +20,7 @@ return [
     */
 
     'tags' => [
-        'ignore_controller_prefix' => false
+        'ignore_controller_prefix' => false,
     ],
 
     /*

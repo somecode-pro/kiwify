@@ -4,8 +4,8 @@ namespace Somecode\Restify\Support\Routes\Resolvers;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Somecode\Restify\Attributes\Tags as TagsAttribute;
 use ReflectionMethod;
+use Somecode\Restify\Attributes\Tags as TagsAttribute;
 use Somecode\Restify\Services\DocBlock;
 
 trait Tags
