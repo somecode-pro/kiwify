@@ -10,6 +10,7 @@ use Somecode\OpenApi\Entities\Method\Method;
 use Somecode\OpenApi\Entities\Method\Patch;
 use Somecode\OpenApi\Entities\Method\Post;
 use Somecode\OpenApi\Entities\Method\Put;
+use Somecode\Restify\Support\Routes\Parameters\Extractor;
 use Somecode\Restify\Support\Routes\Resolvers\MethodDescription;
 use Somecode\Restify\Support\Routes\Resolvers\MethodSummary;
 use Somecode\Restify\Support\Routes\Resolvers\RouteAction;
@@ -46,6 +47,7 @@ class RouteData
 
         $this->applySummaryIfExists($method);
         $this->applyDescriptionIfExists($method);
+        $this->applyParametersIfExists($method);
 
         return $method;
     }
@@ -86,5 +88,14 @@ class RouteData
         if (is_string($description)) {
             $method->description($description);
         }
+    }
+
+    private function applyParametersIfExists(Method $method): void
+    {
+        $extractor = new Extractor($this->route, $this->action());
+
+        $parameters = $extractor->parameters();
+
+        $method->addParameters($parameters);
     }
 }
