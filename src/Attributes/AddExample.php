@@ -4,7 +4,7 @@ namespace Somecode\Restify\Attributes;
 
 use Attribute;
 
-#[Attribute(Attribute::TARGET_ALL|Attribute::IS_REPEATABLE)]
+#[Attribute(Attribute::TARGET_ALL | Attribute::IS_REPEATABLE)]
 class AddExample
 {
     public function __construct(
