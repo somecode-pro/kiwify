@@ -19,6 +19,9 @@ use Somecode\Restify\Attributes\Deprecated;
 use Somecode\Restify\Attributes\Description;
 use Somecode\Restify\Attributes\Example;
 use Somecode\Restify\Attributes\Explode;
+use Somecode\Restify\Attributes\Path\LabelStyle;
+use Somecode\Restify\Attributes\Path\MatrixStyle;
+use Somecode\Restify\Attributes\Path\SimpleStyle;
 use Somecode\Restify\Services\Attr;
 
 class Path
@@ -112,6 +115,12 @@ class Path
                     ->value($attr->value)
             );
         });
+
+        foreach ($this->parameterStyles() as $style => $method) {
+            Attr::handle($arg, $style, function () use ($param, $method) {
+                $param->{$method}();
+            });
+        }
     }
 
     private function defaultParameterProperties(): array
@@ -121,6 +130,15 @@ class Path
             Example::class => 'example',
             Explode::class => 'explode',
             Deprecated::class => 'deprecated',
+        ];
+    }
+
+    private function parameterStyles(): array
+    {
+        return [
+            LabelStyle::class => 'useLabelStyle',
+            MatrixStyle::class => 'useMatrixStyle',
+            SimpleStyle::class => 'useSimpleStyle',
         ];
     }
 }
