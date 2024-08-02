@@ -94,6 +94,8 @@ class RouteData
     {
         $extractor = new Extractor($this->route, $this->action());
 
-        $extractor->parameters();
+        $parameters = $extractor->parameters();
+
+        $method->addParameters($parameters);
     }
 }
