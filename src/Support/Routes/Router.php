@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Somecode\OpenApi\Entities\Path;
 use Somecode\Restify\Restify;
-use Somecode\Restify\Support\Extensions\Method\Extension;
+use Somecode\Restify\Support\MethodExtensions\Extension;
 
 class Router
 {
@@ -45,6 +45,8 @@ class Router
                 $extension->apply($route);
             }
 
+            // dump($route->getMethodNode());
+
             if (! $paths->has($route->uri())) {
                 $paths->put($route->uri(), Path::create($route->uri()));
             }
@@ -60,9 +62,13 @@ class Router
 
     private function getRoutesCollection(): Collection
     {
-        return $this->getFilteredRoutes()->map(
-            fn (RouteInfo $route) => new RouteData($route)
-        );
+        return $this->getFilteredRoutes()
+            ->map(
+                fn (RouteInfo $route) => new RouteData($route)
+            )
+            ->filter(
+                fn (RouteData $route) => ! $route->isInvalidAction()
+            );
     }
 
     /**

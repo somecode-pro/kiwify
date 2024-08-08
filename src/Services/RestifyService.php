@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\File;
 use Somecode\OpenApi\Builder;
 use Somecode\Restify\Support\Applicants\RoutesApplicant;
 use Somecode\Restify\Support\Applicants\ServersApplicant;
-use Somecode\Restify\Support\Extensions\DescriptionExtension;
-use Somecode\Restify\Support\Extensions\ParametersExtension;
-use Somecode\Restify\Support\Extensions\SummaryExtension;
-use Somecode\Restify\Support\Extensions\TagsExtension;
+use Somecode\Restify\Support\MethodExtensions\DescriptionExtension;
+use Somecode\Restify\Support\MethodExtensions\ParametersExtension;
+use Somecode\Restify\Support\MethodExtensions\RequestBodyExtension;
+use Somecode\Restify\Support\MethodExtensions\SummaryExtension;
+use Somecode\Restify\Support\MethodExtensions\TagsExtension;
 
 class RestifyService
 {
@@ -45,6 +46,7 @@ class RestifyService
             SummaryExtension::class,
             DescriptionExtension::class,
             ParametersExtension::class,
+            RequestBodyExtension::class,
         ];
     }
 }
