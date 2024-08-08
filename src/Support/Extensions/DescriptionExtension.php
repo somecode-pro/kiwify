@@ -1,14 +1,31 @@
 <?php
 
-namespace Somecode\Restify\Support\Routes\Resolvers;
+namespace Somecode\Restify\Support\Extensions;
 
 use ReflectionMethod;
 use Somecode\Restify\Attributes\Description;
+use Somecode\Restify\Exceptions\RouteMethodNotSupported;
 use Somecode\Restify\Services\DocBlock;
+use Somecode\Restify\Support\Routes\RouteData;
 
-trait MethodDescription
+class DescriptionExtension implements Extension
 {
-    public function getDescription(ReflectionMethod $action): ?string
+    /**
+     * @throws RouteMethodNotSupported
+     */
+    public function apply(RouteData $route): void
+    {
+        $method = $route->getSpecificationMethodInstance();
+        $reflection = $route->getMethodReflector()->getReflection();
+
+        $description = $this->getDescription($reflection);
+
+        if (is_string($description)) {
+            $method->description($description);
+        }
+    }
+
+    private function getDescription(ReflectionMethod $action): ?string
     {
         return $this->getDescriptionFromAttributes($action) ?? $this->getDescriptionFromDocBlock($action);
     }

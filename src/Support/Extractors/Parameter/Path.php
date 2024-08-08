@@ -1,6 +1,6 @@
 <?php
 
-namespace Somecode\Restify\Support\Routes\Parameters;
+namespace Somecode\Restify\Support\Extractors\Parameter;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Routing\Route;

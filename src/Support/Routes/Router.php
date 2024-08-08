@@ -7,6 +7,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Somecode\OpenApi\Entities\Path;
+use Somecode\Restify\Restify;
+use Somecode\Restify\Support\Extensions\Method\Extension;
 
 class Router
 {
@@ -36,6 +38,13 @@ class Router
         $paths = collect();
 
         foreach ($this->routes as $route) {
+            foreach (Restify::extensions() as $extension) {
+                /** @var Extension $extension */
+                $extension = new $extension();
+
+                $extension->apply($route);
+            }
+
             if (! $paths->has($route->uri())) {
                 $paths->put($route->uri(), Path::create($route->uri()));
             }
@@ -43,7 +52,7 @@ class Router
             /** @var Path $path */
             $path = $paths->get($route->uri());
 
-            $path->addMethod($route->methodInstance());
+            $path->addMethod($route->getSpecificationMethodInstance());
         }
 
         return $paths->values();

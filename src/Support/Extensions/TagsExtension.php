@@ -1,16 +1,32 @@
 <?php
 
-namespace Somecode\Restify\Support\Routes\Resolvers;
+namespace Somecode\Restify\Support\Extensions;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use ReflectionClass;
 use ReflectionMethod;
 use Somecode\Restify\Attributes\Tags as TagsAttribute;
+use Somecode\Restify\Exceptions\RouteMethodNotSupported;
 use Somecode\Restify\Services\DocBlock;
+use Somecode\Restify\Support\Routes\RouteData;
 
-trait Tags
+class TagsExtension implements Extension
 {
-    public function getRouteTags(ReflectionMethod $action): array
+    /**
+     * @throws RouteMethodNotSupported
+     */
+    public function apply(RouteData $route): void
+    {
+        $method = $route->getSpecificationMethodInstance();
+        $reflection = $route->getMethodReflector()->getReflection();
+
+        $tags = $this->getTags($reflection);
+
+        $method->tags($tags);
+    }
+
+    private function getTags(ReflectionMethod $action): array
     {
         $tags = $this->getTagsFromAttributes($action);
 
@@ -23,7 +39,7 @@ trait Tags
 
     private function getTagsFromAttributes(ReflectionMethod $action): array
     {
-        $controller = new \ReflectionClass($action->class);
+        $controller = new ReflectionClass($action->class);
 
         $attributes = array_merge(
             $controller->getAttributes(TagsAttribute::class),
@@ -74,7 +90,7 @@ trait Tags
 
     private function getTagByControllerName(ReflectionMethod $action): string
     {
-        $controller = new \ReflectionClass($action->class);
+        $controller = new ReflectionClass($action->class);
 
         return config('restify.tags.ignore_controller_prefix') === true
             ? str_replace('Controller', '', $controller->getShortName())
