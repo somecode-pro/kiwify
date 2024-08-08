@@ -1,13 +1,30 @@
 <?php
 
-namespace Somecode\Restify\Support\Routes\Resolvers;
+namespace Somecode\Restify\Support\Extensions;
 
 use ReflectionMethod;
 use Somecode\Restify\Attributes\Summary;
+use Somecode\Restify\Exceptions\RouteMethodNotSupported;
 use Somecode\Restify\Services\DocBlock;
+use Somecode\Restify\Support\Routes\RouteData;
 
-trait MethodSummary
+class SummaryExtension implements Extension
 {
+    /**
+     * @throws RouteMethodNotSupported
+     */
+    public function apply(RouteData $route): void
+    {
+        $method = $route->getSpecificationMethodInstance();
+        $reflector = $route->getMethodReflector()->getReflection();
+
+        $summary = $this->getSummary($reflector);
+
+        if (is_string($summary)) {
+            $method->summary($summary);
+        }
+    }
+
     public function getSummary(ReflectionMethod $action): ?string
     {
         return $this->getSummaryFromAttributes($action) ?? $this->getSummaryFromDocBlock($action);

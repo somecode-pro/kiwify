@@ -1,12 +1,12 @@
 <?php
 
-namespace Somecode\Restify\Support\Routes\Parameters;
+namespace Somecode\Restify\Support\Extractors\Parameter;
 
 use Illuminate\Routing\Route;
 use ReflectionMethod;
 use Somecode\OpenApi\Entities\Parameter\PathParameter;
 
-class Extractor
+class ParametersExtractor
 {
     public function __construct(
         private Route $route,

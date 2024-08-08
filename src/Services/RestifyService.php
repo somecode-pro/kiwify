@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\File;
 use Somecode\OpenApi\Builder;
 use Somecode\Restify\Support\Applicants\RoutesApplicant;
 use Somecode\Restify\Support\Applicants\ServersApplicant;
+use Somecode\Restify\Support\Extensions\DescriptionExtension;
+use Somecode\Restify\Support\Extensions\ParametersExtension;
+use Somecode\Restify\Support\Extensions\SummaryExtension;
+use Somecode\Restify\Support\Extensions\TagsExtension;
 
 class RestifyService
 {
@@ -32,5 +36,15 @@ class RestifyService
         }
 
         File::put(config('restify.path'), $this->builder->toJson());
+    }
+
+    public function extensions(): array
+    {
+        return [
+            TagsExtension::class,
+            SummaryExtension::class,
+            DescriptionExtension::class,
+            ParametersExtension::class,
+        ];
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void build()
+ * @method static array extensions()
  *
  * @see \Somecode\Restify\Services\RestifyService
  */

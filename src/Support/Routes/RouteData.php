@@ -10,20 +10,25 @@ use Somecode\OpenApi\Entities\Method\Method;
 use Somecode\OpenApi\Entities\Method\Patch;
 use Somecode\OpenApi\Entities\Method\Post;
 use Somecode\OpenApi\Entities\Method\Put;
-use Somecode\Restify\Support\Routes\Parameters\Extractor;
-use Somecode\Restify\Support\Routes\Resolvers\MethodDescription;
-use Somecode\Restify\Support\Routes\Resolvers\MethodSummary;
-use Somecode\Restify\Support\Routes\Resolvers\RouteAction;
-use Somecode\Restify\Support\Routes\Resolvers\Tags;
+use Somecode\Restify\Exceptions\RouteMethodNotSupported;
+use Somecode\Restify\Support\Reflectors\MethodReflector;
 
 class RouteData
 {
-    use MethodDescription, MethodSummary, RouteAction, Tags;
+    private Method $specificationMethod;
 
+    private string $controllerClassName;
+
+    private string $actionMethodName;
+
+    /**
+     * @throws RouteMethodNotSupported
+     */
     public function __construct(
         public readonly Route $route
     ) {
-        $this->getRouteAction($route);
+        $this->getControllerAndMethod();
+        $this->specificationMethod = $this->getSpecificationMethodInstance();
     }
 
     public function uri(): string
@@ -36,66 +41,48 @@ class RouteData
         return Arr::first($this->route->methods());
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function methodInstance(): Method
+    public function route(): Route
     {
-        $method = $this->getMethodInstance();
+        return $this->route;
+    }
 
-        $method->tags($this->tags());
-
-        $this->applySummaryIfExists($method);
-        $this->applyDescriptionIfExists($method);
-        $this->applyParametersIfExists($method);
-
-        return $method;
+    public function getMethodReflector(): MethodReflector
+    {
+        return MethodReflector::create($this->controllerClassName, $this->actionMethodName);
     }
 
     /**
-     * @throws \Exception
+     * @throws RouteMethodNotSupported
      */
-    private function getMethodInstance(): Method
+    public function getSpecificationMethodInstance(): Method
     {
-        return match ($this->method()) {
+        return $this->specificationMethod ??= match ($this->method()) {
             'GET' => Get::create(),
             'POST' => Post::create(),
             'PUT' => Put::create(),
             'PATCH' => Patch::create(),
             'DELETE' => Delete::create(),
-            default => throw new \Exception('Method not supported'),
+            default => throw new RouteMethodNotSupported("Method '{$this->method()}' not supported"),
         };
     }
 
-    private function tags(): array
+    private function getControllerAndMethod(): void
     {
-        return $this->getRouteTags($this->action());
-    }
+        $action = $this->route->getActionName();
 
-    private function applySummaryIfExists(Method $method): void
-    {
-        $summary = $this->getSummary($this->action());
-
-        if (is_string($summary)) {
-            $method->summary($summary);
+        if (str_contains($action, '@')) {
+            [$controller, $method] = explode('@', $action);
+        } elseif (class_exists($action)) {
+            $controller = $action;
+            $method = '__invoke';
         }
-    }
 
-    private function applyDescriptionIfExists(Method $method): void
-    {
-        $description = $this->getDescription($this->action());
+        $controller = $controller ?? null;
+        $action = $method ?? null;
 
-        if (is_string($description)) {
-            $method->description($description);
+        if ($controller && $action) {
+            $this->controllerClassName = $controller;
+            $this->actionMethodName = $action;
         }
-    }
-
-    private function applyParametersIfExists(Method $method): void
-    {
-        $extractor = new Extractor($this->route, $this->action());
-
-        $parameters = $extractor->parameters();
-
-        $method->addParameters($parameters);
     }
 }
