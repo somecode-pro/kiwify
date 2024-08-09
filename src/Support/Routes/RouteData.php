@@ -4,6 +4,7 @@ namespace Somecode\Restify\Support\Routes;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
+use PhpParser\Node\Stmt\ClassMethod;
 use Somecode\OpenApi\Entities\Method\Delete;
 use Somecode\OpenApi\Entities\Method\Get;
 use Somecode\OpenApi\Entities\Method\Method;
@@ -46,9 +47,21 @@ class RouteData
         return $this->route;
     }
 
+    public function isInvalidAction(): bool
+    {
+        return ! method_exists($this->controllerClassName, $this->actionMethodName);
+    }
+
     public function getMethodReflector(): MethodReflector
     {
         return MethodReflector::create($this->controllerClassName, $this->actionMethodName);
+    }
+
+    public function getMethodNode(): ?ClassMethod
+    {
+        $reflector = $this->getMethodReflector();
+
+        return $reflector->getAstNode();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Somecode\Restify\Support\Extensions;
+namespace Somecode\Restify\Support\MethodExtensions;
 
 use ReflectionMethod;
 use Somecode\Restify\Attributes\Description;

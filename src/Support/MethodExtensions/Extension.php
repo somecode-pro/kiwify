@@ -1,6 +1,6 @@
 <?php
 
-namespace Somecode\Restify\Support\Extensions;
+namespace Somecode\Restify\Support\MethodExtensions;
 
 use Somecode\Restify\Support\Routes\RouteData;
 
