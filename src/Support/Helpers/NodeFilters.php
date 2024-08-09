@@ -10,4 +10,9 @@ class NodeFilters
     {
         return $node instanceof Node\Expr\ArrayItem && $node->key instanceof Node\Scalar\String_;
     }
+
+    public function arrayItemsWithDocBlock(Node $node): bool
+    {
+        return $this->arrayItems($node) && ! is_null($node->getDocComment());
+    }
 }

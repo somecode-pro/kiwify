@@ -9,7 +9,8 @@ class RequestBodyExtension implements Extension
 {
     public function apply(RouteData $route): void
     {
-        $validationRulesExtractor = new ValidationRulesExtractor($route);
-        $validationRulesExtractor->extract();
+        $validationRules = (new ValidationRulesExtractor($route))->extract();
+
+        dd($validationRules);
     }
 }

@@ -4,8 +4,9 @@ namespace Somecode\Restify\Support\Mappers;
 
 use PhpParser\Node;
 use PhpParser\Node\ArrayItem;
+use Somecode\Restify\Support\Extractors\Node\NodeValue;
 
-class ArrayNodeMapper
+class ArrayNodeItemsMapper
 {
     public function __construct(
         /** @var Node\ArrayItem[] */
@@ -17,12 +18,15 @@ class ArrayNodeMapper
         $rules = collect();
 
         foreach ($this->nodes as $node) {
-            if (! $node->value instanceof Node\Expr\Array_) {
+            if (! $node->value instanceof Node\Expr\Array_ && ! $node->value instanceof Node\Scalar\String_) {
                 continue;
             }
 
-            $fieldRules = $node->value->items;
+            $fieldRules = $node->value instanceof Node\Expr\Array_
+                ? $node->value->items
+                : explode('|', $node->value->value);
 
+            // todo: may be need numbers also
             if (! $node->key instanceof Node\Scalar\String_) {
                 continue;
             }
@@ -39,29 +43,10 @@ class ArrayNodeMapper
     private function getFiledRules(array $items): array
     {
         return collect($items)
-            ->map(function (Node\ArrayItem $item) {
-                return $this->getRuleValueFromNode($item->value);
+            ->map(function (Node\ArrayItem|string $item) {
+                return is_string($item) ? $item : NodeValue::extract($item->value);
             })
             ->filter(fn (mixed $value) => ! is_null($value))
             ->toArray();
-    }
-
-    private function getRuleValueFromNode($item)
-    {
-        if ($item instanceof Node\Scalar\String_) {
-            return $item->value;
-        } elseif ($item instanceof Node\Expr\New_) {
-            return $this->resolveClassInstance($item);
-        }
-
-        return null;
-    }
-
-    private function resolveClassInstance(Node\Expr\New_ $item)
-    {
-        $className = $item->class->name;
-        $args = $item->getArgs();
-
-        dd($className, $args[0]);
     }
 }

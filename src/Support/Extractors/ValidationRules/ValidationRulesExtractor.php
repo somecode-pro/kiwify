@@ -4,25 +4,32 @@ namespace Somecode\Restify\Support\Extractors\ValidationRules;
 
 use Somecode\Restify\Support\Routes\RouteData;
 
-class ValidationRulesExtractor
+readonly class ValidationRulesExtractor
 {
     public function __construct(
         private RouteData $route
     ) {}
 
-    public function extract()
+    public function extract(): ExtractedRulesResult
     {
         $reflector = $this->route->getMethodReflector();
-        $reflectionMethod = $reflector->getReflection();
 
-        $formRequestRulesExtractor = new FormRequestRulesExtractor($reflector->getReflection());
+        return $this->mergeResults(
+            (new FormRequestRulesExtractor($reflector))->extract(),
+            (new ValidateCallExtractor($reflector))->extract()
+        );
+    }
 
-        $rules = $formRequestRulesExtractor->getRules();
+    private function mergeResults(?ExtractedRulesResult $formRequestResult, ?ExtractedRulesResult $validateCallResult): ExtractedRulesResult
+    {
+        $formRequestRules = $formRequestResult?->getRules() ?? [];
+        $formRequestNodes = $formRequestResult?->getNodes() ?? [];
+        $validateCallRules = $validateCallResult?->getRules() ?? [];
+        $validateCallNodes = $validateCallResult?->getNodes() ?? [];
 
-        dump($rules);
-
-        $nodes = $formRequestRulesExtractor->getNodes();
-
-        // dump($rules, $nodes);
+        return new ExtractedRulesResult(
+            rules: array_merge($formRequestRules, $validateCallRules),
+            nodes: array_merge($formRequestNodes, $validateCallNodes)
+        );
     }
 }

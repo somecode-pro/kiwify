@@ -4,23 +4,33 @@ namespace Somecode\Restify\Support\Extractors\ValidationRules;
 
 use Illuminate\Foundation\Http\FormRequest;
 use PhpParser\Node;
-use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use Somecode\Restify\Services\NodeFinder;
 use Somecode\Restify\Support\Helpers\NodeFilters;
-use Somecode\Restify\Support\Mappers\ArrayNodeMapper;
 use Somecode\Restify\Support\Reflectors\MethodReflector;
 
-class FormRequestRulesExtractor
+readonly class FormRequestRulesExtractor
 {
     public function __construct(
-        private ReflectionMethod $reflectionMethod
+        private MethodReflector $reflector
     ) {}
 
-    public function extract() {}
+    public function extract(): ?ExtractedRulesResult
+    {
+        $rules = $this->getRules();
 
-    public function getRules(): array
+        if (empty($rules)) {
+            return null;
+        }
+
+        return new ExtractedRulesResult(
+            rules: $rules,
+            nodes: $this->getNodes()
+        );
+    }
+
+    private function getRules(): array
     {
         $requestClassName = $this->getFormRequestClassFromMethodParameters();
 
@@ -38,7 +48,7 @@ class FormRequestRulesExtractor
         return [];
     }
 
-    public function getNodes()
+    private function getNodes(): array
     {
         $requestClassName = $this->getFormRequestClassFromMethodParameters();
 
@@ -50,39 +60,24 @@ class FormRequestRulesExtractor
 
         $astNode = $reflector->getAstNode();
 
-        $nodes = NodeFinder::find($astNode, [new NodeFilters, 'arrayItems']);
+        $result = [];
 
-        $arrayNodeMapper = new ArrayNodeMapper($nodes);
+        $nodes = NodeFinder::find($astNode, [new NodeFilters, 'arrayItemsWithDocBlock']);
 
-        dd(
-            $arrayNodeMapper->toValidationRules()
-        );
-
-        $nodes = collect($nodes)->map(function (Node\ArrayItem $item) {
-            return [
-                'key' => $item->key->value,
-                'value' => collect($item->value->items)->map(function ($item) {
-                    return $this->getNodeValue($item);
-                })->toArray(),
-            ];
-        });
-
-        dd($nodes->toArray());
-    }
-
-    private function getNodeValue($node)
-    {
-        if ($node->value instanceof Node\Expr\StaticCall) {
-            return dd($node->value);
+        /** @var Node\ArrayItem $node */
+        foreach ($nodes as $node) {
+            $result[$node->key->value] = $node;
         }
 
-        return null;
+        return $result;
     }
 
     public function getFormRequestClassFromMethodParameters(): ?string
     {
+        $reflection = $this->reflector->getReflection();
+
         /** @var ReflectionParameter $parameter */
-        $parameter = collect($this->reflectionMethod->getParameters())->first(function (ReflectionParameter $parameter) {
+        $parameter = collect($reflection->getParameters())->first(function (ReflectionParameter $parameter) {
             if ($parameter->hasType()) {
                 $type = $parameter->getType();
 
